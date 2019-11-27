@@ -47,6 +47,10 @@ class RestaurantViewController: UIViewController {
                 self.reviewCountlbl.text = "\((review?.reviews_count)!) Reviews"
             }
         }
+        
+        restaurantViewModel.makeDailyMenuRequest(with: (restaurantObj?.id)!) { (menulist, error) in
+            print("menu list : \(menulist)")
+        }
     }
     /*
     // MARK: - Navigation

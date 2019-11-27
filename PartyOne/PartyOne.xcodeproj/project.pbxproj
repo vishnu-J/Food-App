@@ -13,6 +13,10 @@
 		1869392F238EA51D00AA8C98 /* User_reviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1869392B238EA51D00AA8C98 /* User_reviews.swift */; };
 		18693930238EA51D00AA8C98 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1869392C238EA51D00AA8C98 /* Review.swift */; };
 		18693931238EA51D00AA8C98 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1869392D238EA51D00AA8C98 /* User.swift */; };
+		18693936238EA90500AA8C98 /* Daily_menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18693933238EA90500AA8C98 /* Daily_menu.swift */; };
+		18693937238EA90500AA8C98 /* MenuList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18693934238EA90500AA8C98 /* MenuList.swift */; };
+		18693938238EA90500AA8C98 /* Dishes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18693935238EA90500AA8C98 /* Dishes.swift */; };
+		1869393A238EA9EA00AA8C98 /* DailyMenuRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18693939238EA9EA00AA8C98 /* DailyMenuRequest.swift */; };
 		188C889F238D290B0002120B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188C889E238D290B0002120B /* AppDelegate.swift */; };
 		188C88A1238D290B0002120B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188C88A0238D290B0002120B /* ViewController.swift */; };
 		188C88A4238D290B0002120B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 188C88A2238D290B0002120B /* Main.storyboard */; };
@@ -95,6 +99,10 @@
 		1869392B238EA51D00AA8C98 /* User_reviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User_reviews.swift; sourceTree = "<group>"; };
 		1869392C238EA51D00AA8C98 /* Review.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 		1869392D238EA51D00AA8C98 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		18693933238EA90500AA8C98 /* Daily_menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Daily_menu.swift; sourceTree = "<group>"; };
+		18693934238EA90500AA8C98 /* MenuList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuList.swift; sourceTree = "<group>"; };
+		18693935238EA90500AA8C98 /* Dishes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dishes.swift; sourceTree = "<group>"; };
+		18693939238EA9EA00AA8C98 /* DailyMenuRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DailyMenuRequest.swift; path = ../../../../../../../../../Desktop/DailyMenuRequest.swift; sourceTree = "<group>"; };
 		188C889B238D290B0002120B /* PartyOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PartyOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		188C889E238D290B0002120B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		188C88A0238D290B0002120B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -193,6 +201,16 @@
 			path = ReviewModel;
 			sourceTree = "<group>";
 		};
+		18693932238EA8EE00AA8C98 /* DailyMenuModel */ = {
+			isa = PBXGroup;
+			children = (
+				18693933238EA90500AA8C98 /* Daily_menu.swift */,
+				18693935238EA90500AA8C98 /* Dishes.swift */,
+				18693934238EA90500AA8C98 /* MenuList.swift */,
+			);
+			path = DailyMenuModel;
+			sourceTree = "<group>";
+		};
 		188C8892238D290B0002120B = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +280,7 @@
 		188C88E4238D2CDE0002120B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				18693932238EA8EE00AA8C98 /* DailyMenuModel */,
 				18693923238EA16300AA8C98 /* ReviewModel */,
 				188C894E238D73170002120B /* RestaurantModel */,
 				188C8945238D448C0002120B /* RetaurantCollectionModel */,
@@ -359,6 +378,7 @@
 				188C896D238D77F50002120B /* GeoCodeRequest.swift */,
 				188C894C238D47A40002120B /* RestaurantCollectionRequest.swift */,
 				18693921238EA0F700AA8C98 /* ReviewRequest.swift */,
+				18693939238EA9EA00AA8C98 /* DailyMenuRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -557,6 +577,7 @@
 				188C8918238D2E150002120B /* URLParameterEncoding.swift in Sources */,
 				18693930238EA51D00AA8C98 /* Review.swift in Sources */,
 				188C89A9238E37880002120B /* User_rating.swift in Sources */,
+				18693938238EA90500AA8C98 /* Dishes.swift in Sources */,
 				188C896E238D77F50002120B /* GeoCodeRequest.swift in Sources */,
 				188C8942238D3FE10002120B /* ImageLib.swift in Sources */,
 				188C88F2238D2D300002120B /* LocationHelper.swift in Sources */,
@@ -585,6 +606,7 @@
 				188C8906238D2DE20002120B /* HTTPTask.swift in Sources */,
 				188C89B9238E7F530002120B /* RestaurantViewController.swift in Sources */,
 				188C89AD238E37880002120B /* Title.swift in Sources */,
+				1869393A238EA9EA00AA8C98 /* DailyMenuRequest.swift in Sources */,
 				188C8979238D80440002120B /* FoodViewController.swift in Sources */,
 				188C89AF238E37880002120B /* Nearby_restaurants.swift in Sources */,
 				188C89AE238E37880002120B /* Location.swift in Sources */,
@@ -597,6 +619,7 @@
 				188C893D238D3FC00002120B /* CacheType.swift in Sources */,
 				188C89A8238E37880002120B /* R.swift in Sources */,
 				188C89AB238E37880002120B /* Has_menu_status.swift in Sources */,
+				18693937238EA90500AA8C98 /* MenuList.swift in Sources */,
 				18693931238EA51D00AA8C98 /* User.swift in Sources */,
 				188C89B7238E7B810002120B /* FloatRatingView.swift in Sources */,
 				188C8974238D79400002120B /* FoodCell.swift in Sources */,
@@ -610,6 +633,7 @@
 				188C893C238D3FC00002120B /* CacheProtocol.swift in Sources */,
 				188C8923238D33610002120B /* UserDefaultManager.swift in Sources */,
 				188C891A238D2E220002120B /* MacroHelper.swift in Sources */,
+				18693936238EA90500AA8C98 /* Daily_menu.swift in Sources */,
 				188C88EB238D2D160002120B /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -23,4 +23,14 @@ class RestaurantViewModel :NSObject{
             }
         }
     }
+    
+    func makeDailyMenuRequest(with res_ID:String, completion:@escaping(MenuList?,String?) -> ()) {
+        DailyMenuRequest(with: res_ID).makeRequest { (menuList, error) in
+            if error == nil{
+                completion(menuList!, nil)
+            }else{
+                completion(nil,error)
+            }
+        }
+    }
 }

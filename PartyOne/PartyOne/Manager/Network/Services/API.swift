@@ -15,6 +15,7 @@ public enum PartyOneAPI {
     case Collection
     case GeoCode(location:[String:String])
     case Reviews(res_id:String)
+    case DailyMenu(res_id:String)
 }
 
 extension PartyOneAPI : EndPointType{
@@ -79,6 +80,14 @@ extension PartyOneAPI : EndPointType{
             
             url = getReviewURL(url: url, with: resId)!
             return url
+        case .DailyMenu(let resId):
+            guard var url = URL(string: "\(environmentBaseURL)") else{
+                Logger.d(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
+                return nil
+            }
+            
+            url = getReviewURL(url: url, with: resId)!
+            return url
         }
     }
     
@@ -94,6 +103,8 @@ extension PartyOneAPI : EndPointType{
             return "geocode"
         case .Reviews:
             return "reviews"
+        case .DailyMenu:
+            return "dailymenu"
         }
     }
     
@@ -109,6 +120,8 @@ extension PartyOneAPI : EndPointType{
             return .get
         case .Reviews:
             return .get
+        case .DailyMenu:
+            return .get
         }
     }
     
@@ -117,7 +130,7 @@ extension PartyOneAPI : EndPointType{
         case .Categories:
             return .requestDefault
             
-        case .Cities, .Collection, .GeoCode, .Reviews:
+        case .Cities, .Collection, .GeoCode, .Reviews, .DailyMenu:
             return .requestParametersAndHeaders(bodyParameters: nil, bodyEncoding: .urlEncoding, urlParameters: nil, additionHeaders: headers)
             
         }
@@ -127,7 +140,7 @@ extension PartyOneAPI : EndPointType{
         switch self {
         case .Categories:
             return [:]
-        case .Cities( _), .Collection, .GeoCode, .Reviews:
+        case .Cities( _), .Collection, .GeoCode, .Reviews, .DailyMenu:
             var headers = [String:String]()
             headers[RequestConstants.USER_KEY] = Constants.USER_KEY
             return headers
