@@ -11,12 +11,8 @@ import UIKit
 class RestaurantViewController: UIViewController {
  
     var restaurantObj : Restaurant?
+    let restaurantViewModel = RestaurantViewModel()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
     @IBOutlet weak var RestaurantImgView: UIImageView!
     @IBOutlet weak var name: UILabel!
     
@@ -27,9 +23,30 @@ class RestaurantViewController: UIViewController {
     @IBOutlet weak var pricelbl: UILabel!
     @IBOutlet weak var rating: FloatRatingView!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        getReviews()
+        ImageLib.sharedInstance().download(for: (restaurantObj?.featured_image)!, mountOver: RestaurantImgView)
+        name.text = restaurantObj?.name
+        rating.rating = Double((restaurantObj?.user_rating?.aggregate_rating)!)!
+        cuisinelbl.text = restaurantObj?.cuisines
+        
+        pricelbl.text = "\((restaurantObj?.currency)!) \((restaurantObj?.average_cost_for_two)!)"
+        // Do any additional setup after loading the view.
+    }
 
+    
     @IBAction func backbtnAction(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    private func getReviews(){
+        restaurantViewModel.makeReviewRequest(with: (restaurantObj?.id)!) { (review, error) in
+            DispatchQueue.main.async {
+                self.reviewCountlbl.text = "\((review?.reviews_count)!) Reviews"
+            }
+        }
     }
     /*
     // MARK: - Navigation

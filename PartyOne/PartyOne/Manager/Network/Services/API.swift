@@ -14,27 +14,14 @@ public enum PartyOneAPI {
     case Cities(location:[String:String])
     case Collection
     case GeoCode(location:[String:String])
+    case Reviews(res_id:String)
 }
 
 extension PartyOneAPI : EndPointType{
     
-    
-    var headers: HTTPHeaders? {
-    
-        switch self {
-        case .Categories:
-            return [:]
-        case .Cities( _), .Collection, .GeoCode:
-            var headers = [String:String]()
-            headers[RequestConstants.USER_KEY] = Constants.USER_KEY
-            return headers
-        default:
-            return [:]
-        }
-    }
-    
-    
+
     private static let TAG = "PtyOAPI"
+    
     var environmentBaseURL : String {
         
         switch PONetworkBase.environment {
@@ -84,20 +71,29 @@ extension PartyOneAPI : EndPointType{
             
             url = getlocationURL(url: url, loc_Dict: locationDict)!
             return url
+        case .Reviews(let resId):
+            guard var url = URL(string: "\(environmentBaseURL)") else{
+                Logger.d(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
+                return nil
+            }
+            
+            url = getReviewURL(url: url, with: resId)!
+            return url
         }
-        
     }
     
     var path:String{
         switch self {
         case .Categories:
-            return "/categories"
+            return "categories"
         case .Cities:
             return "cities"
         case .Collection:
-            return "/collections"
+            return "collections"
         case .GeoCode:
             return "geocode"
+        case .Reviews:
+            return "reviews"
         }
     }
     
@@ -111,6 +107,8 @@ extension PartyOneAPI : EndPointType{
             return .get
         case .GeoCode:
             return .get
+        case .Reviews:
+            return .get
         }
     }
     
@@ -119,9 +117,20 @@ extension PartyOneAPI : EndPointType{
         case .Categories:
             return .requestDefault
             
-        case .Cities, .Collection, .GeoCode:
+        case .Cities, .Collection, .GeoCode, .Reviews:
             return .requestParametersAndHeaders(bodyParameters: nil, bodyEncoding: .urlEncoding, urlParameters: nil, additionHeaders: headers)
             
+        }
+    }
+    
+    var headers: HTTPHeaders? {
+        switch self {
+        case .Categories:
+            return [:]
+        case .Cities( _), .Collection, .GeoCode, .Reviews:
+            var headers = [String:String]()
+            headers[RequestConstants.USER_KEY] = Constants.USER_KEY
+            return headers
         }
     }
     
@@ -153,6 +162,14 @@ extension PartyOneAPI{
             return nil
         }
         queryItems.append(URLQueryItem(name: "city_id", value: locationId))
+        let urlComps = NSURLComponents(string: url.absoluteString)!
+        urlComps.queryItems = queryItems
+        return urlComps.url!
+    }
+    
+    private func getReviewURL(url:URL,with resId:String) -> URL?{
+        var queryItems = [URLQueryItem]()
+        queryItems.append(URLQueryItem(name: "res_id", value: resId))
         let urlComps = NSURLComponents(string: url.absoluteString)!
         urlComps.queryItems = queryItems
         return urlComps.url!
