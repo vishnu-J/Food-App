@@ -31,6 +31,11 @@ class RestaurantViewController: UIViewController {
     var restaurantObj : Restaurant?
     let restaurantViewModel = RestaurantViewModel()
     var reviewList : [User_reviews]?
+    var reviewCellAnimateCount = 1
+    var timeInterval = 60
+    var currentOFfset = 0.0
+    var timer:Timer?
+    var collectionView_ContentSize : CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,8 +59,9 @@ class RestaurantViewController: UIViewController {
         }
         
         if restaurantObj?.is_delivering_now == 1{
-            deliveryStatuslbl.text = "Delivery Available Now"
+            deliveryStatuslbl.text = "Delivery Available"
             deliveryStatuslbl.textColor = UIColor(displayP3Red: 220/255.0, green: 20/255.0, blue: 60/255, alpha: 1)
+            deliveryStatuslbl.applyBlink()
         }else{
             deliveryStatuslbl.text = "Delivery UnAvailable"
             deliveryStatuslbl.textColor = .lightGray
@@ -64,12 +70,28 @@ class RestaurantViewController: UIViewController {
         votelbl.text = "\((restaurantObj?.user_rating?.votes!)!) \n Votes"
         
     }
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-            eventsView.roundCorners(corners: [.topLeft, .bottomLeft], radius: 15)
+        eventsView.roundCorners(corners: [.topLeft, .bottomLeft], radius: 15)
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if timer != nil{
+            self.timer?.invalidate()
+        }
+    }
+    
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Constants.EVENT_VC_SEGUE{
+            let _ = segue.destination as! EventsViewController
+        }
+    }
+    
     
     @IBAction func backbtnAction(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
@@ -88,6 +110,8 @@ class RestaurantViewController: UIViewController {
                     self.reviewCountlbl.text = "\(count) Reviews"
                 }
                 self.reviewCollectionView.reloadData()
+                self.applyTimer()
+                self.collectionView_ContentSize = self.reviewCollectionView.contentSize.width
             }
         }
         
@@ -104,24 +128,31 @@ class RestaurantViewController: UIViewController {
         return highLightStr
     }
     
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.EVENT_VC_SEGUE{
-            let eventVC = segue.destination as! EventsViewController
+    private func applyTimer(){
+        if timer == nil{
+            timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+                self.timeInterval -= 5
+                
+                if self.timeInterval != 0 {
+                     /** this check is use to check whether last cell is currently showing.In this case just reset the `reviewCellAnimateCount` value to 1 and also reset the x offset value to 0 to show the first cell again */
+                    if self.reviewList?.count == self.reviewCellAnimateCount{
+                        self.reviewCellAnimateCount = 1
+                        self.reviewCollectionView.contentOffset.x = 0
+                    }else{
+                        let xValue = CGFloat(self.reviewCollectionView.frame.width) * CGFloat(self.reviewCellAnimateCount)
+                        self.reviewCollectionView.contentOffset.x = xValue + CGFloat(10 * self.reviewCellAnimateCount)
+                        self.reviewCellAnimateCount += 1
+                    }
+                }else{
+                    self.timeInterval = 60
+                }
+            })
         }
     }
- 
-    
-    
-
-
 }
 
 
-extension RestaurantViewController : UICollectionViewDelegate, UICollectionViewDataSource{
+extension RestaurantViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let _ = reviewList{
@@ -142,7 +173,13 @@ extension RestaurantViewController : UICollectionViewDelegate, UICollectionViewD
         cell.reviewCountlbl.text = "\(review.likes!)"
         cell.commentCountlbl.text = "\(review.comments_count!)"
         cell.reviewtimelbl.text = review.review_time_friendly
-        
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+    
+    
+    
 }

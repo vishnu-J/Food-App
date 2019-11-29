@@ -12,6 +12,7 @@ class Constants {
     public static let RESTAURANT_IDENTIFIER = "restaurant_cell"
     public static let FOOD_IDENTIFIER = "food_cell"
     public static let REVIEW_IDENTIFIER = "review_cell"
+    public static let MENU_IDENTIFIER = "menu_cell"
     public static let FOOD_VC_SEGUE = "restaurantVC_seque"
     public static let EVENT_VC_SEGUE = "eventVC_segue"
     public static let USER_KEY = "ab55e514c4e978d0427076473946458d"

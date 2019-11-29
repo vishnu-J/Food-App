@@ -24,13 +24,11 @@ class ViewControllerViewModel: NSObject {
                 guard let location = firstLocation else{
                     return
                 }
-                DispatchQueue.main.async {
-                    var details = [String:String]()
-                    details[UserDefaultConstant.LOC_ID] = "\(String(describing: location.id!))"
-                    details[UserDefaultConstant.LOC_NAME] = location.name
-                    details[UserDefaultConstant.LOC_IMAGE_URL] = location.country_flag_url
-                    UserDefaultManager.save(data: details, for: DefaultKey.CITY_DETAILS)
-                }
+                var details = [String:String]()
+                details[UserDefaultConstant.LOC_ID] = "\(String(describing: location.id!))"
+                details[UserDefaultConstant.LOC_NAME] = location.name
+                details[UserDefaultConstant.LOC_IMAGE_URL] = location.country_flag_url
+                UserDefaultManager.save(data: details, for: DefaultKey.CITY_DETAILS)
                
                 completion(true,nil)
             }else{

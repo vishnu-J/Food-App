@@ -14,18 +14,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var countryImg: UIImageView!
     @IBOutlet weak var restaurantTableView: UITableView!
     @IBOutlet weak var locationlbl: UILabel!
-
+    @IBOutlet weak var menutableView: UITableView!
+    @IBOutlet weak var menuTopView: UIView!
+    @IBOutlet weak var sideMenu: UIView!
+    
     private let viewModel = ViewControllerViewModel()
     private var restaurantList = [Nearby_restaurants]()
-    var currenttSelectedItem : Restaurant?
+    var selectedItem : Restaurant?
     let locationManager = CLLocationManager()
-    
+    var isMenuOpened = false
+    let menuList = ["Categories","Cousines"]
+    let menuImage = ["category", "cuisine"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         restaurantTableView.delegate = self
         restaurantTableView.dataSource = self
+        menutableView.delegate = self
+        menutableView.dataSource = self
+//        sideMenu.backgroundColor = .orange
         registerCell()
     }
     
@@ -43,14 +51,36 @@ class ViewController: UIViewController {
             print("Please turn on location services or GPS")
         }
     }
-    
-    
+
     override func viewDidAppear(_ animated: Bool) {
         
     }
     
+    @IBAction func clsoeBtnAction(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            self.sideMenu.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion: nil)
+        isMenuOpened = false
+    }
+    
+    @IBAction func menuBtnAction(_ sender: UIButton) {
+        if !isMenuOpened{
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                switch UIDevice.current.userInterfaceIdiom{
+                case .phone:
+                    self.sideMenu.transform = CGAffineTransform(translationX: 200, y: 0)
+                case .pad:
+                    self.sideMenu.transform = CGAffineTransform(translationX: 400, y: 0)
+                default: break
+                }
+            }, completion: nil)
+            isMenuOpened = true
+        }
+        
+    }
     private func registerCell(){
         restaurantTableView.register(UINib(nibName: "RestaurantCell", bundle: nil), forCellReuseIdentifier: Constants.RESTAURANT_IDENTIFIER)
+        menutableView.register(UINib(nibName: "MenuCell", bundle: nil), forCellReuseIdentifier: Constants.MENU_IDENTIFIER)
     }
     
     private func getRestaurants(){
@@ -69,7 +99,7 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.FOOD_VC_SEGUE{
             let restaurantVC = segue.destination as! RestaurantViewController
-            restaurantVC.restaurantObj = currenttSelectedItem
+            restaurantVC.restaurantObj = selectedItem
         }
     }
     
@@ -79,27 +109,53 @@ class ViewController: UIViewController {
 extension ViewController :  UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return restaurantList.count
+        if tableView == menutableView{
+            return menuList.count
+        }else{
+            return restaurantList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.RESTAURANT_IDENTIFIER, for: indexPath) as? RestaurantCell
-        ImageLib.sharedInstance().download(for: self.restaurantList[indexPath.row].restaurant?.featured_image ?? "", mountOver: (cell?.restaurantImg)!)
-        cell?.ratinglbl.text = self.restaurantList[indexPath.row].restaurant?.user_rating?.aggregate_rating
-        cell?.ratingView.backgroundColor = UIColor(hexString: (self.restaurantList[indexPath.row].restaurant?.user_rating?.rating_color)!)
-        cell?.restaurantName.text = restaurantList[indexPath.row].restaurant?.name
-        cell?.rating_txt.text = restaurantList[indexPath.row].restaurant?.user_rating?.rating_text
-        cell?.locationlbl.text = restaurantList[indexPath.row].restaurant?.location?.address
-        cell?.cuisine_txt.text = restaurantList[indexPath.row].restaurant?.cuisines
-        return cell!
+        if tableView == menutableView{
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.MENU_IDENTIFIER, for: indexPath) as! MenuCell
+            cell.menuNamelbl.text = menuList[indexPath.row]
+            cell.menuImageView.image = UIImage(named: menuImage[indexPath.row])
+            return cell
+        }else{
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.RESTAURANT_IDENTIFIER, for: indexPath) as? RestaurantCell
+            ImageLib.sharedInstance().download(for: self.restaurantList[indexPath.row].restaurant?.featured_image ?? "", mountOver: (cell?.restaurantImg)!)
+            cell?.ratinglbl.text = self.restaurantList[indexPath.row].restaurant?.user_rating?.aggregate_rating
+            cell?.ratingView.backgroundColor = UIColor(hexString: (self.restaurantList[indexPath.row].restaurant?.user_rating?.rating_color)!)
+            cell?.restaurantName.text = restaurantList[indexPath.row].restaurant?.name
+            cell?.rating_txt.text = restaurantList[indexPath.row].restaurant?.user_rating?.rating_text
+            cell?.locationlbl.text = restaurantList[indexPath.row].restaurant?.location?.address
+            cell?.cuisine_txt.text = restaurantList[indexPath.row].restaurant?.cuisines
+            return cell!
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        
+       let device = UIDevice.current.userInterfaceIdiom
+        switch device {
+        case .phone:
+            if tableView == menutableView{
+                return 50
+            }
+            return 200
+        case .pad:
+            if tableView == menutableView{
+                return 100
+            }
+            return 400
+        default:break
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currenttSelectedItem = restaurantList[indexPath.row].restaurant
+        selectedItem = restaurantList[indexPath.row].restaurant
         self.performSegue(withIdentifier: Constants.FOOD_VC_SEGUE, sender: self)
     }
 }
@@ -125,6 +181,8 @@ extension ViewController : CLLocationManagerDelegate{
                     }
                 }
                 self.getRestaurants()
+            }else{
+                print("location not saved because of \(error)")
             }
         }
     }
