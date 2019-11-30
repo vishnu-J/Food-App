@@ -10,9 +10,7 @@ import Foundation
 
 class RestaurantViewModel :NSObject{
     
-    override init() {
-        
-    }
+    override init() {}
     
     func makeReviewRequest(with res_ID:String, completion:@escaping(Reviews?,String?)->()) {
         ReviewRequest(with: res_ID).makeRequest { (review, error) in

@@ -11,7 +11,6 @@ import CoreLocation
 
 class ViewControllerViewModel: NSObject {
     
-    private let locationHelper = LocationHelper()
     var locationDict = [String:String]()
     
     override init() {}
@@ -34,7 +33,7 @@ class ViewControllerViewModel: NSObject {
             }else{
                 completion(false,error)
             }
-        }
+        } 
     }
         
     func prepareLocation(location:CLLocation){
@@ -44,13 +43,6 @@ class ViewControllerViewModel: NSObject {
     
     
     func getRestaurants(completion: @escaping ([Nearby_restaurants]?,String?) -> ()) {
-        /*RestaurantCollectionRequest().makeRequest { (restaurant, error) in
-            if error == nil{
-                completion(restaurant?.collections ?? nil,nil)
-            }else{
-                completion(nil,error)
-            }
-        }*/
         GeoCodeRequest(location: locationDict).makeRequest { (restaurant, error) in
             if error == nil{
                 completion(restaurant?.nearby_restaurants,nil)
@@ -59,6 +51,5 @@ class ViewControllerViewModel: NSObject {
             }
         }
     }
-    
     
 }

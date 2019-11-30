@@ -11,6 +11,8 @@ import CoreLocation
 
 class ViewController: UIViewController {
     
+    static let TAG = "VC"
+    
     @IBOutlet weak var countryImg: UIImageView!
     @IBOutlet weak var restaurantTableView: UITableView!
     @IBOutlet weak var locationlbl: UILabel!
@@ -23,7 +25,7 @@ class ViewController: UIViewController {
     var selectedItem : Restaurant?
     let locationManager = CLLocationManager()
     var isMenuOpened = false
-    let menuList = ["Categories","Cousines"]
+    let menuList = ["Restaurant \n Collections","Cusines"]
     let menuImage = ["category", "cuisine"]
     
     override func viewDidLoad() {
@@ -33,13 +35,11 @@ class ViewController: UIViewController {
         restaurantTableView.dataSource = self
         menutableView.delegate = self
         menutableView.dataSource = self
-//        sideMenu.backgroundColor = .orange
         registerCell()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         if CLLocationManager.locationServicesEnabled() == true {
-            
             if CLLocationManager.authorizationStatus() == .restricted || CLLocationManager.authorizationStatus() == .denied ||  CLLocationManager.authorizationStatus() == .notDetermined {
                 locationManager.requestWhenInUseAuthorization()
                 locationManager.requestAlwaysAuthorization()
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
             locationManager.delegate = self
             locationManager.startUpdatingLocation()
         } else {
-            print("Please turn on location services or GPS")
+            Alert.alert(message: "Please turn on location services or GPS", actionTitle: "Ok", vc:self)
         }
     }
 
@@ -57,13 +57,15 @@ class ViewController: UIViewController {
     }
     
     @IBAction func clsoeBtnAction(_ sender: UIButton) {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-            self.sideMenu.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        isMenuOpened = false
+       closeSideMenu()
     }
     
     @IBAction func menuBtnAction(_ sender: UIButton) {
+        openSideMenu()
+    }
+    
+    // MARK : Helper Methods
+    private func openSideMenu(){
         if !isMenuOpened{
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
                 switch UIDevice.current.userInterfaceIdiom{
@@ -76,8 +78,15 @@ class ViewController: UIViewController {
             }, completion: nil)
             isMenuOpened = true
         }
-        
     }
+    
+    private func closeSideMenu(){
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            self.sideMenu.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion: nil)
+        isMenuOpened = false
+    }
+    
     private func registerCell(){
         restaurantTableView.register(UINib(nibName: "RestaurantCell", bundle: nil), forCellReuseIdentifier: Constants.RESTAURANT_IDENTIFIER)
         menutableView.register(UINib(nibName: "MenuCell", bundle: nil), forCellReuseIdentifier: Constants.MENU_IDENTIFIER)
@@ -91,9 +100,22 @@ class ViewController: UIViewController {
                     self.restaurantTableView.reloadData()
                 }
             }else{
-                print("Myerror : \(String(describing: error))")
+                Logger.i(ViewController.TAG, "ERROR : \(String(describing: error))")
             }
         }
+    }
+    
+    private func openRestaurantCollectionVC(){
+        let storyBoard: UIStoryboard = UIStoryboard(name: Constants.STORYBOARD_NAME, bundle: nil)
+        let res_coll_vc = storyBoard.instantiateViewController(withIdentifier: Constants.RESTAURANT_COLLECTION_VC_ID) as! RestaurantCollectionVc
+        self.navigationController?.pushViewController(res_coll_vc, animated: true)
+    }
+    
+    
+    private func openCuisineVC(){
+        let storyBoard: UIStoryboard = UIStoryboard(name: Constants.STORYBOARD_NAME, bundle: nil)
+        let res_coll_vc = storyBoard.instantiateViewController(withIdentifier: Constants.CUISINE_VC_ID) as! CuisineVC
+        self.navigationController?.pushViewController(res_coll_vc, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -155,8 +177,17 @@ extension ViewController :  UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedItem = restaurantList[indexPath.row].restaurant
-        self.performSegue(withIdentifier: Constants.FOOD_VC_SEGUE, sender: self)
+        if tableView == menutableView{
+            if indexPath.row == 0{
+                self.openRestaurantCollectionVC()
+            }else if indexPath.row == 1{
+                self.openCuisineVC()
+            }
+            closeSideMenu()
+        }else{
+            selectedItem = restaurantList[indexPath.row].restaurant
+            self.performSegue(withIdentifier: Constants.FOOD_VC_SEGUE, sender: self)
+        }
     }
 }
 
@@ -168,7 +199,6 @@ extension ViewController : CLLocationManagerDelegate{
 
         viewModel.prepareLocation(location: loc!)
         viewModel.makeCityReQuest { (islocationSaved, error) in
-            print(" closure loc upadate")
             if islocationSaved{
                 self.locationManager.stopUpdatingLocation()
                 let data = UserDefaultManager.get(datafor: .CITY_DETAILS) as? [String:String]
@@ -180,15 +210,22 @@ extension ViewController : CLLocationManagerDelegate{
                         self.locationlbl.text = name
                     }
                 }
+                
                 self.getRestaurants()
-            }else{
-                print("location not saved because of \(error)")
+            }else{                
+                Logger.i(ViewController.TAG,"location not saved because of \(String(describing: error))")
             }
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        print("Authorization status -> \(status.rawValue)")
+        Logger.i(ViewController.TAG,"Authorization Status Changed : \(status.rawValue)")
+        if status.rawValue == 4{
+            locationManager.startUpdatingLocation()
+        }
+//        if status.rawValue != 4 || status.rawValue != 3{
+//            Alert.alert(message: "Please turn on location services or GPS", actionTitle: "Ok", vc:self)
+//        }
     }
 }
 

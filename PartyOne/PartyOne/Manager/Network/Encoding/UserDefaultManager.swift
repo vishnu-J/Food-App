@@ -30,7 +30,8 @@ class UserDefaultManager {
     /// used to get data in userDefault
     ///
     /// - Parameter key: to get the respective value of the key
-    static func get(datafor key:DefaultKey) ->  Any{
-        return poDefault.object(forKey: key.rawValue)!
+    static func get(datafor key:DefaultKey) ->  Any?{
+        guard let value = poDefault.object(forKey: key.rawValue) else { return nil }
+        return value
     }
 }

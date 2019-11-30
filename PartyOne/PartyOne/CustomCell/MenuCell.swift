@@ -15,7 +15,6 @@ class MenuCell: UITableViewCell {
     @IBOutlet weak var menuNamelbl: UILabel!
     @IBOutlet weak var holderView: UIView!
     
-    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         holderView.roundCorners(corners: [.topRight, .bottomRight], radius: 20)

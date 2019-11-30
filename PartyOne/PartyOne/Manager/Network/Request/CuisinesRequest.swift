@@ -1,20 +1,26 @@
 //
-//  RestaurantCollection.swift
+//  CuisinesRequest.swift
 //  PartyOne
 //
-//  Created by Vishnu on 26/11/19.
+//  Created by Vishnu on 30/11/19.
 //  Copyright © 2019 GreedyGame. All rights reserved.
 //
 
 import Foundation
 
-class RestaurantCollectionRequest : PONetworkBase, NetworkProtocol {
-    typealias GGNetworkReturnType = RestaurantsCollection
+class CuisinesRequest : PONetworkBase, NetworkProtocol{
     
-    func makeRequest(completion: @escaping (RestaurantsCollection?, String?) -> ()) {
-        router.request(.Collection) { (data, response, error) in
+    typealias GGNetworkReturnType = CuisineList
+    
+    override init() { }
+    
+    
+    
+    func makeRequest(completion: @escaping (CuisineList?, String?) -> ()) {
+        router.request(.Cuisines) { (data, response, error) in
             if error != nil{
-                completion(nil,(String(describing: error)))
+                completion(nil, "GeoCode request failed with error : \(String(describing: error?.localizedDescription))")
+                return
             }
             
             if let response = response as? HTTPURLResponse {
@@ -28,7 +34,7 @@ class RestaurantCollectionRequest : PONetworkBase, NetworkProtocol {
                     }
                     do {
                         _ = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers)
-                        let apiResponse = try JSONDecoder().decode(RestaurantsCollection.self, from: responseData)
+                        let apiResponse = try JSONDecoder().decode(CuisineList.self, from: responseData)
                         
                         completion(apiResponse,nil)
                     }catch {
@@ -39,8 +45,8 @@ class RestaurantCollectionRequest : PONetworkBase, NetworkProtocol {
                     completion(nil, networkFailureError)
                 }
             }
-            
         }
     }
     
 }
+

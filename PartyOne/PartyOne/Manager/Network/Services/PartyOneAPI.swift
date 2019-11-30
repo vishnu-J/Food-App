@@ -16,6 +16,7 @@ public enum PartyOneAPI {
     case GeoCode(location:[String:String])
     case Reviews(res_id:String)
     case DailyMenu(res_id:String)
+    case Cuisines
 }
 
 extension PartyOneAPI : EndPointType{
@@ -38,7 +39,7 @@ extension PartyOneAPI : EndPointType{
     var baseURL: URL? {
         switch self {
         case .Categories:
-            guard var url = URL(string: "\(environmentBaseURL)") else {
+            guard let url = URL(string: "\(environmentBaseURL)") else {
                 Logger.d(PartyOneAPI.TAG, "Categories not able to produce")
                 return nil
             }
@@ -56,7 +57,7 @@ extension PartyOneAPI : EndPointType{
             
         case .Collection:
             guard var url = URL(string: "\(environmentBaseURL)") else {
-                Logger.d(PartyOneAPI.TAG, "Collection not able to produce")
+                Logger.i(PartyOneAPI.TAG, "Collection not able to produce")
                 return nil
             }
             
@@ -66,7 +67,7 @@ extension PartyOneAPI : EndPointType{
             return url
         case .GeoCode(let locationDict):
             guard var url = URL(string: "\(environmentBaseURL)") else{
-                Logger.d(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
+                Logger.i(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
                 return nil
             }
             
@@ -74,7 +75,7 @@ extension PartyOneAPI : EndPointType{
             return url
         case .Reviews(let resId):
             guard var url = URL(string: "\(environmentBaseURL)") else{
-                Logger.d(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
+                Logger.i(PartyOneAPI.TAG, "ReviewsURL not able to produce")
                 return nil
             }
             
@@ -82,13 +83,23 @@ extension PartyOneAPI : EndPointType{
             return url
         case .DailyMenu(let resId):
             guard var url = URL(string: "\(environmentBaseURL)") else{
-                Logger.d(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
+                Logger.i(PartyOneAPI.TAG, "GeoCodeURL not able to produce")
                 return nil
             }
             
             url = getReviewURL(url: url, with: resId)!
             return url
+            
+        case .Cuisines:
+            guard var url = URL(string: "\(environmentBaseURL)") else{
+                Logger.i(PartyOneAPI.TAG, "CuisinesURL not able to produce")
+                return nil
+            }
+            guard let finalURL = getRestaurantCollectionURL(url: url) else{return nil}
+            url = finalURL
+            return url
         }
+        
     }
     
     var path:String{
@@ -105,24 +116,13 @@ extension PartyOneAPI : EndPointType{
             return "reviews"
         case .DailyMenu:
             return "dailymenu"
+        case .Cuisines:
+            return "cuisines"
         }
     }
     
     var httpMethod: HTTPMethod{
-        switch self {
-        case .Categories:
-            return .get
-        case .Cities:
-            return .get
-        case .Collection:
-            return .get
-        case .GeoCode:
-            return .get
-        case .Reviews:
-            return .get
-        case .DailyMenu:
-            return .get
-        }
+       return .get
     }
     
     var task: HTTPTask{
@@ -130,7 +130,7 @@ extension PartyOneAPI : EndPointType{
         case .Categories:
             return .requestDefault
             
-        case .Cities, .Collection, .GeoCode, .Reviews, .DailyMenu:
+        case .Cities, .Collection, .GeoCode, .Reviews, .DailyMenu, .Cuisines:
             return .requestParametersAndHeaders(bodyParameters: nil, bodyEncoding: .urlEncoding, urlParameters: nil, additionHeaders: headers)
             
         }
@@ -140,7 +140,7 @@ extension PartyOneAPI : EndPointType{
         switch self {
         case .Categories:
             return [:]
-        case .Cities( _), .Collection, .GeoCode, .Reviews, .DailyMenu:
+        case .Cities( _), .Collection, .GeoCode, .Reviews, .DailyMenu, .Cuisines:
             var headers = [String:String]()
             headers[RequestConstants.USER_KEY] = Constants.USER_KEY
             return headers
@@ -171,9 +171,11 @@ extension PartyOneAPI{
         
         let locationDetails = UserDefaultManager.get(datafor: .CITY_DETAILS) as? [String:String]
         guard let locationId = locationDetails?[UserDefaultConstant.LOC_ID] else{
+            Logger.i(PartyOneAPI.TAG, "location id is not available")
             print("location id is nil")
             return nil
         }
+        
         queryItems.append(URLQueryItem(name: "city_id", value: locationId))
         let urlComps = NSURLComponents(string: url.absoluteString)!
         urlComps.queryItems = queryItems

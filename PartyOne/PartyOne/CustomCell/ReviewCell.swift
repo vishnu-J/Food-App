@@ -22,6 +22,7 @@ class ReviewCell: UICollectionViewCell {
     @IBOutlet weak var ratingtxtlbl: UILabel!
     @IBOutlet weak var commentCountlbl: UILabel!
     @IBOutlet weak var reviewlbl: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
