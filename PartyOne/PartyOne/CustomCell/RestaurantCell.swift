@@ -19,17 +19,18 @@ class RestaurantCell: UITableViewCell {
     @IBOutlet weak var cuisine_txt: UILabel!
     @IBOutlet weak var ratingView: UIView!
     @IBOutlet weak var rating_txt: UILabel!
+    @IBOutlet weak var locationbtn: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         selectionStyle = .none
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
-    
+        
 }

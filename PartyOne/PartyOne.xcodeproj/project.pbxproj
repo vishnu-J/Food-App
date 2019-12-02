@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180279D82395220E0033AE8C /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180279D72395220E0033AE8C /* MapView.swift */; };
+		180279DA239522190033AE8C /* MapView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180279D9239522190033AE8C /* MapView.xib */; };
 		1827C7742390F88B0060FC11 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1827C7722390F88B0060FC11 /* MenuCell.swift */; };
 		1827C7752390F88B0060FC11 /* MenuCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1827C7732390F88B0060FC11 /* MenuCell.xib */; };
 		1827C7772391010E0060FC11 /* main-img-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1827C7762391010E0060FC11 /* main-img-2.png */; };
@@ -100,6 +102,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		180279D72395220E0033AE8C /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		180279D9239522190033AE8C /* MapView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapView.xib; sourceTree = "<group>"; };
 		1827C7722390F88B0060FC11 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		1827C7732390F88B0060FC11 /* MenuCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuCell.xib; sourceTree = "<group>"; };
 		1827C7762391010E0060FC11 /* main-img-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "main-img-2.png"; sourceTree = "<group>"; };
@@ -204,6 +208,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		180279D6239521EA0033AE8C /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				180279D72395220E0033AE8C /* MapView.swift */,
+				180279D9239522190033AE8C /* MapView.xib */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
 		18693923238EA16300AA8C98 /* ReviewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -425,6 +438,7 @@
 		188C891B238D2E970002120B /* CustomCell */ = {
 			isa = PBXGroup;
 			children = (
+				180279D6239521EA0033AE8C /* CustomView */,
 				188C8972238D79400002120B /* RestaurantCollectionCell.swift */,
 				188C8973238D79400002120B /* RestaurantCollectionCell.xib */,
 				188C891D238D2EB40002120B /* RestaurantCell.swift */,
@@ -576,6 +590,7 @@
 				188C88A9238D290F0002120B /* Assets.xcassets in Resources */,
 				188C88A4238D290B0002120B /* Main.storyboard in Resources */,
 				1827C7772391010E0060FC11 /* main-img-2.png in Resources */,
+				180279DA239522190033AE8C /* MapView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,6 +630,7 @@
 				188C8911238D2DFE0002120B /* NetworkBase.swift in Sources */,
 				188C89AC238E37880002120B /* Bg_color.swift in Sources */,
 				188C8936238D3EC10002120B /* ZLocationDetails.swift in Sources */,
+				180279D82395220E0033AE8C /* MapView.swift in Sources */,
 				188C8909238D2DE20002120B /* EndPointType.swift in Sources */,
 				188C894D238D47A40002120B /* RestaurantCollectionRequest.swift in Sources */,
 				188C89A7238E37880002120B /* Popularity.swift in Sources */,
