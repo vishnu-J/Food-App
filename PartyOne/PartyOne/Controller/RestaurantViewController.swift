@@ -45,7 +45,7 @@ class RestaurantViewController: UIViewController {
         name.text = restaurantObj?.name
         rating.rating = Double((restaurantObj?.user_rating?.aggregate_rating)!)!
         cuisinelbl.text = restaurantObj?.cuisines
-        pricelbl.text = "\((restaurantObj?.currency)!) \((restaurantObj?.average_cost_for_two)!)"
+        pricelbl.text = "\((restaurantObj?.currency)!) \((restaurantObj?.average_cost_for_two)!) \n for two"
         if let priceRange = restaurantObj?.price_range{
             priceRangelbl.text = "\(priceRange)"
 

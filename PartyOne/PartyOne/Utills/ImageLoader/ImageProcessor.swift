@@ -13,7 +13,6 @@ class ImageProcessor  {
     
     final let TAG = "Img_proc"
     
-    
     init() {}
     
     func processImage(data:Data, url:String, imageHolder:UIImageView)  {

@@ -147,7 +147,7 @@ extension ViewController :  UITableViewDelegate, UITableViewDataSource{
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.RESTAURANT_IDENTIFIER, for: indexPath) as? RestaurantCell
             ImageLib.sharedInstance().download(for: self.restaurantList[indexPath.row].restaurant?.featured_image ?? "", mountOver: (cell?.restaurantImg)!)
-            cell?.ratinglbl.text = self.restaurantList[indexPath.row].restaurant?.user_rating?.aggregate_rating
+            cell?.ratinglbl.text = "\(self.restaurantList[indexPath.row].restaurant?.user_rating?.aggregate_rating ?? "0")*"
             cell?.ratingView.backgroundColor = UIColor(hexString: (self.restaurantList[indexPath.row].restaurant?.user_rating?.rating_color)!)
             cell?.restaurantName.text = restaurantList[indexPath.row].restaurant?.name
             cell?.rating_txt.text = restaurantList[indexPath.row].restaurant?.user_rating?.rating_text
@@ -165,7 +165,7 @@ extension ViewController :  UITableViewDelegate, UITableViewDataSource{
             if tableView == menutableView{
                 return 50
             }
-            return 200
+            return (tableView.frame.height/2) - 10
         case .pad:
             if tableView == menutableView{
                 return 100
@@ -212,7 +212,7 @@ extension ViewController : CLLocationManagerDelegate{
                 }
                 
                 self.getRestaurants()
-            }else{                
+            }else{
                 Logger.i(ViewController.TAG,"location not saved because of \(String(describing: error))")
             }
         }
